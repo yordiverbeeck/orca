@@ -33,6 +33,8 @@ type IssueSourceActionsInput = Pick<
 import { useCallback, useMemo } from 'react'
 import type { LinearIssue } from '../../../../shared/linear/issue-types'
 import type { JiraIssue } from '../../../../shared/jira-types'
+import type { TodoistTask } from '../../../../shared/todoist-types'
+import { buildTodoistWorkspaceSource } from '../../../../shared/new-workspace/workspace-source'
 import {
   toLinearLinkedWorkItem,
   getLinkedItemDisplayName,
@@ -154,6 +156,34 @@ export function useIssueSourceActions(input: IssueSourceActionsInput) {
     ]
   )
 
+  const handleSmartTodoistTaskSelect = useCallback(
+    (task: TodoistTask): void => {
+      const linkedItem = buildTodoistWorkspaceSource(task)
+      setLinkedIssue('')
+      setLinkedPR(null)
+      setLinkedGitLabIssue(null)
+      setLinkedGitLabMR(null)
+      setLinkedTaskSourceContext(null)
+      setLinkedWorkItem(linkedItem)
+      const suggestedName =
+        getLinkedWorkItemWorkspaceName(linkedItem)?.seedName ??
+        getLinkedWorkItemSuggestedName(linkedItem)
+      if (
+        suggestedName &&
+        (shouldApplyWorkspaceSourceAutoName({
+          currentName: name,
+          lastAutoName: lastAutoNameRef.current
+        }) ||
+          name.trim() === task.id ||
+          name.trim() === task.content)
+      ) {
+        setName(suggestedName)
+        lastAutoNameRef.current = suggestedName
+      }
+    },
+    [lastAutoNameRef, name, setLinkedGitLabIssue, setLinkedGitLabMR, setLinkedIssue, setLinkedPR, setLinkedTaskSourceContext, setLinkedWorkItem, setName]
+  )
+
   const handleSmartJiraIssueSelect = useCallback(
     (issue: JiraIssue, sourceContext: TaskSourceContext): void => {
       const linkedItem: LinkedWorkItemSummary = buildJiraWorkspaceSource(issue)
@@ -269,6 +299,7 @@ export function useIssueSourceActions(input: IssueSourceActionsInput) {
 
   return {
     handleSmartLinearIssueSelect,
+    handleSmartTodoistTaskSelect,
     handleSmartJiraIssueSelect,
     handleClearSmartNameSelection,
     smartNameSelection

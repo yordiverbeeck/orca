@@ -56,6 +56,7 @@ export type ComposerSourceModel = {
   handleSmartGitLabItemSelect: (item: GitLabWorkItem) => void
   handleSmartJiraIssueSelect: (issue: JiraIssue, sourceContext: TaskSourceContext) => void
   handleSmartLinearIssueSelect: (issue: LinearIssue) => void
+  handleSmartTodoistTaskSelect: (task: import('../../../../shared/todoist-types').TodoistTask) => void
   handleSparseSelectPreset: (preset: SparsePreset | null) => void
   insertComposerFolderPaths: (folderPaths: string[]) => void
   onConnectSelectedProjectGroup: () => Promise<void>

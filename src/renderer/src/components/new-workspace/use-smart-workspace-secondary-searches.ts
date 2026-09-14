@@ -3,6 +3,7 @@ import { searchRuntimeRepoBaseRefDetails } from '@/runtime/runtime-repo-client'
 import { lookupLinearIssueUrl } from '@/lib/linear-issue-url-lookup'
 import { linearWorkspaceScopeSignature } from '../../../../shared/linear/workspace-types'
 import { getSmartWorkspaceLinearSearchQuery } from '../../../../shared/new-workspace/smart-workspace-linear-intent'
+import { parseBoundedSmartWorkspaceTodoistTaskInput } from '../../../../shared/new-workspace/smart-workspace-todoist-intent'
 import type { parseBoundedSmartWorkspaceLinearIssueUrlIntent } from '../../../../shared/new-workspace/smart-workspace-linear-intent'
 import { RESULT_LIMIT } from './smart-workspace-name-field-model'
 import { getBranchSearchRequest } from './smart-workspace-source-results'
@@ -17,7 +18,9 @@ export function useSmartWorkspaceSecondarySearches({
   linearUrlIntent,
   linearUrlIntentOwnsInput,
   shouldQueryJira,
-  jiraSearchJql
+  jiraSearchJql,
+  shouldQueryTodoist,
+  todoistQuery
 }: {
   foundation: Foundation
   shouldQueryLinear: boolean
@@ -26,6 +29,8 @@ export function useSmartWorkspaceSecondarySearches({
   linearUrlIntentOwnsInput: boolean
   shouldQueryJira: boolean
   jiraSearchJql: string | null
+  shouldQueryTodoist: boolean
+  todoistQuery: string
 }): void {
   const {
     disabled,
@@ -52,7 +57,11 @@ export function useSmartWorkspaceSecondarySearches({
     jiraConnectionStatus,
     searchJiraIssues,
     setJiraIssues,
-    setJiraLoading
+    setJiraLoading,
+    searchTodoistTasks,
+    fetchTodoistTask,
+    todoistStatus,
+    setTodoistTasks
   } = foundation
   // Read the latest metadata for URL resolution without making the search effect depend on object identity.
   const linearStatusRef = useRef(linearStatus)
@@ -257,5 +266,38 @@ export function useSmartWorkspaceSecondarySearches({
     setJiraIssues,
     setJiraLoading,
     shouldQueryJira
+  ])
+
+  useEffect(() => {
+    if (!shouldQueryTodoist || todoistStatus.connected !== true || !todoistQuery.trim()) {
+      setTodoistTasks([])
+      return
+    }
+    let stale = false
+    const parsed = parseBoundedSmartWorkspaceTodoistTaskInput(todoistQuery)
+    void (parsed && /^https?:\/\//i.test(todoistQuery.trim())
+      ? fetchTodoistTask(parsed.taskId)
+      : searchTodoistTasks({ query: todoistQuery, limit: RESULT_LIMIT })
+    )
+      .then((result) => {
+        if (!stale) {
+          setTodoistTasks(Array.isArray(result) ? result : result ? [result] : [])
+        }
+      })
+      .catch(() => {
+        if (!stale) {
+          setTodoistTasks([])
+        }
+      })
+    return () => {
+      stale = true
+    }
+  }, [
+    fetchTodoistTask,
+    searchTodoistTasks,
+    setTodoistTasks,
+    shouldQueryTodoist,
+    todoistQuery,
+    todoistStatus.connected
   ])
 }

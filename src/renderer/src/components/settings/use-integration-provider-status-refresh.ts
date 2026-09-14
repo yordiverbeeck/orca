@@ -11,8 +11,11 @@ export function useIntegrationProviderStatusRefresh(): void {
   const linearStatusContextKey = useAppStore((s) => s.linearStatusContextKey)
   const jiraStatusChecked = useAppStore((s) => s.jiraStatusChecked)
   const jiraStatusContextKey = useAppStore((s) => s.jiraStatusContextKey)
+  const todoistStatusChecked = useAppStore((s) => s.todoistStatusChecked)
+  const todoistStatusContextKey = useAppStore((s) => s.todoistStatusContextKey)
   const checkLinearConnection = useAppStore((s) => s.checkLinearConnection)
   const checkJiraConnection = useAppStore((s) => s.checkJiraConnection)
+  const checkTodoistConnection = useAppStore((s) => s.checkTodoistConnection)
   const refreshPreflightStatus = useAppStore((s) => s.refreshPreflightStatus)
   const expectedPreflightContextKey = useAppStore((s) =>
     localPreflightContextKey(getLocalPreflightContext(s))
@@ -21,6 +24,7 @@ export function useIntegrationProviderStatusRefresh(): void {
   const preflightStatusCurrent = preflightStatusContextKey === expectedPreflightContextKey
   const linearStatusCurrent = linearStatusContextKey === providerRuntimeContextKey
   const jiraStatusCurrent = jiraStatusContextKey === providerRuntimeContextKey
+  const todoistStatusCurrent = todoistStatusContextKey === providerRuntimeContextKey
 
   useEffect(() => {
     if (!linearStatusCurrent || !linearStatusChecked) {
@@ -29,15 +33,22 @@ export function useIntegrationProviderStatusRefresh(): void {
     if (!jiraStatusCurrent || !jiraStatusChecked) {
       void checkJiraConnection()
     }
+    if (!todoistStatusCurrent || !todoistStatusChecked) {
+      void checkTodoistConnection()
+    }
     if (!preflightStatusCurrent || !preflightStatusChecked) {
       void refreshPreflightStatus()
     }
   }, [
     checkJiraConnection,
     checkLinearConnection,
+    checkTodoistConnection,
     jiraStatusChecked,
     jiraStatusCurrent,
     jiraStatusContextKey,
+    todoistStatusChecked,
+    todoistStatusCurrent,
+    todoistStatusContextKey,
     linearStatusChecked,
     linearStatusCurrent,
     linearStatusContextKey,

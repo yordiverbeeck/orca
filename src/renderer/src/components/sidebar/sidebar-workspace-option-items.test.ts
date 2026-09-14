@@ -32,10 +32,14 @@ describe('worktree card property options', () => {
       'linear-issue'
     ])
     expect(options.find((option) => option.id === 'jira-issue')?.properties).toEqual(['jira-issue'])
+    expect(options.find((option) => option.id === 'todoist-task')?.properties).toEqual([
+      'todoist-task'
+    ])
     expect(options.find((option) => option.id === 'automation')?.properties).toEqual(['automation'])
     expect(options.map((option) => option.label)).toContain('GitHub issues')
     expect(options.map((option) => option.label)).toContain('Linear issues')
     expect(options.map((option) => option.label)).toContain('Jira issues')
+    expect(options.map((option) => option.label)).toContain('Todoist tasks')
     expect(options.map((option) => option.label)).toContain('Automation')
   })
 

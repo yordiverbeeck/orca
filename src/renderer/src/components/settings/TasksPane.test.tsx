@@ -65,7 +65,8 @@ vi.mock('./TaskSourceSimpleSetup', () => ({
   JiraSetupSteps: (props: { onOpenIntegrations: () => void }) => {
     mocks.jiraSetupProps.push(props)
     return <div data-testid="jira-setup">Jira setup</div>
-  }
+  },
+  TodoistSetupSteps: () => <div data-testid="todoist-setup">Todoist setup</div>
 }))
 
 vi.mock('@/store', () => ({
@@ -76,6 +77,7 @@ vi.mock('@/store', () => ({
       refreshPreflightStatus: () => void
       checkLinearConnection: () => void
       checkJiraConnection: () => void
+      checkTodoistConnection: () => void
       settingsSearchQuery: string
     }) => unknown
   ) =>
@@ -85,6 +87,7 @@ vi.mock('@/store', () => ({
       refreshPreflightStatus: mocks.refreshPreflightStatus,
       checkLinearConnection: mocks.checkLinearConnection,
       checkJiraConnection: mocks.checkJiraConnection,
+      checkTodoistConnection: vi.fn(),
       settingsSearchQuery: ''
     })
 }))
@@ -137,7 +140,8 @@ describe('TasksPane', () => {
         skillChecking: false,
         visible: true
       },
-      jira: { connected: false, checking: false, visible: false }
+      jira: { connected: false, checking: false, visible: false },
+      todoist: { connected: false, checking: false, visible: false }
     }
   })
 

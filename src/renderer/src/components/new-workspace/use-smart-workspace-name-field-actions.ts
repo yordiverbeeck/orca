@@ -43,6 +43,7 @@ export function useSmartWorkspaceNameFieldActions(
     onGitLabItemSelect,
     onJiraIssueSelect,
     onLinearIssueSelect,
+    onTodoistTaskSelect,
     onValueChange,
     setOpen,
     selectedSource,
@@ -99,6 +100,8 @@ export function useSmartWorkspaceNameFieldActions(
           return
         }
         onJiraIssueSelect?.(row.issue, sourceContext)
+      } else if (row.kind === 'todoist') {
+        onTodoistTaskSelect?.(row.task)
       } else {
         onLinearIssueSelect(row.issue)
       }
@@ -113,6 +116,7 @@ export function useSmartWorkspaceNameFieldActions(
       onGitLabItemSelect,
       onJiraIssueSelect,
       onLinearIssueSelect,
+      onTodoistTaskSelect,
       onValueChange,
       setOpen,
       selectJiraAccount

@@ -45,7 +45,7 @@ vi.mock('@/hooks/useInstalledAgentSkills', () => ({
   useInstalledAgentSkillNames: () => mocks.skill
 }))
 
-const ALL_PROVIDERS: readonly TaskProvider[] = ['github', 'gitlab', 'linear', 'jira']
+const ALL_PROVIDERS: readonly TaskProvider[] = ['github', 'gitlab', 'linear', 'jira', 'todoist']
 
 let root: Root | null = null
 let container: HTMLDivElement | null = null
@@ -83,6 +83,9 @@ beforeEach(() => {
     jiraStatus: { connected: true },
     jiraStatusChecked: true,
     jiraStatusContextKey: 'local',
+    todoistStatus: { connected: true },
+    todoistStatusChecked: true,
+    todoistStatusContextKey: 'local',
     linearStatusChecked: true,
     linearStatusContextKey: 'local',
     linearConnected: true
@@ -116,6 +119,7 @@ describe('useTaskSourceProviderReadiness', () => {
     expect(latest?.github).toMatchObject({ connected: true, checking: false })
     expect(latest?.gitlab).toMatchObject({ connected: true, checking: false })
     expect(latest?.jira).toMatchObject({ connected: true, checking: false })
+    expect(latest?.todoist).toMatchObject({ connected: true, checking: false })
     expect(latest?.linear).toMatchObject({
       connected: true,
       checking: false,

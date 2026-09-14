@@ -6,6 +6,10 @@ import {
 } from './smart-workspace-source-results'
 import { parseBoundedSmartWorkspaceLinearIssueUrlIntent } from '../../../../shared/new-workspace/smart-workspace-linear-intent'
 import {
+  getSmartWorkspaceTodoistSearchQuery,
+  parseBoundedSmartWorkspaceTodoistTaskInput
+} from '../../../../shared/new-workspace/smart-workspace-todoist-intent'
+import {
   EMPTY_REPO_SEARCH_REPOS,
   type NormalizedSmartWorkspaceNameFieldProps,
   type SmartWorkspaceNameFieldProps
@@ -92,6 +96,15 @@ export function useSmartWorkspaceNameFieldController({
     foundation.jiraSourceConnected &&
     jiraSourceContext !== null &&
     jiraSearchJql !== null
+  const todoistQuery = getSmartWorkspaceTodoistSearchQuery(foundation.debouncedQuery)
+  const shouldQueryTodoist =
+    !disabled &&
+    !textOnly &&
+    foundation.todoistStatus.connected === true &&
+    isSmartWorkspaceSourceQueryWithinLimit(foundation.debouncedQuery) &&
+    (foundation.mode === 'smart' || foundation.mode === 'todoist') &&
+    (foundation.debouncedQuery.trim().length > 0 ||
+      parseBoundedSmartWorkspaceTodoistTaskInput(foundation.value) !== null)
 
   useSmartWorkspaceGithubSearch({
     foundation,
@@ -105,7 +118,9 @@ export function useSmartWorkspaceNameFieldController({
     linearUrlIntent,
     linearUrlIntentOwnsInput,
     shouldQueryJira,
-    jiraSearchJql
+    jiraSearchJql,
+    shouldQueryTodoist,
+    todoistQuery
   })
   const shouldQueryGitlab =
     sourceQueryWithinLimit &&

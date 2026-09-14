@@ -30,10 +30,17 @@ export type WorktreeCardJiraIssueDisplay = {
   url: string
 }
 
+export type WorktreeCardTodoistTaskDisplay = {
+  identifier: string
+  title: string
+  url: string
+}
+
 export type WorktreeCardMetaBadgesProps = {
   issue: WorktreeCardIssueDisplay | null
   linearIssue: WorktreeCardLinearIssueDisplay | null
   jiraIssue?: WorktreeCardJiraIssueDisplay | null
+  todoistTask?: WorktreeCardTodoistTaskDisplay | null
   review: WorktreeCardPrDisplay | null
   comment: string | null
   automationProvenance?: AutomationWorkspaceProvenance | null

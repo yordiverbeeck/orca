@@ -4,6 +4,7 @@ import {
   LINEAR_ISSUE_LINK_CLEARED
 } from '../../../../shared/linear/links'
 import { parseIssueLinkInput, type IssueLinkProvider } from '../../../../shared/issue-link-input'
+import { buildTodoistTaskUrl } from '../../../../shared/todoist/links'
 import type { WorkspaceSourceProvider } from '../../../../shared/new-workspace/workspace-source'
 import type { WorktreeMeta } from '../../../../shared/worktree/meta-types'
 import type { WorkspaceLinkedItem } from '../../../../shared/worktree/types'
@@ -181,6 +182,9 @@ function keepsLinkedWorkItem(
   if (parsed.provider === 'github') {
     return live.linkedWorkItemProvider === 'github' && parsed.number === live.linkedIssue
   }
+  if (parsed.provider === 'todoist') {
+    return live.linkedWorkItemProvider === 'todoist'
+  }
   if (
     live.linkedWorkItemProvider !== 'linear' ||
     parsed.identifier.toUpperCase() !== live.linkedLinearIssue?.trim().toUpperCase()
@@ -221,7 +225,9 @@ function buildIssueLinkUpdates(
   // other editor to restore it from.
   const displacedWorkItem: Partial<WorktreeMeta> =
     !keepsLinkedWorkItem(trimmed, draft.issueProvider, live) &&
-    (live.linkedWorkItemProvider === 'github' || live.linkedWorkItemProvider === 'linear') &&
+    (live.linkedWorkItemProvider === 'github' ||
+      live.linkedWorkItemProvider === 'linear' ||
+      live.linkedWorkItemProvider === 'todoist') &&
     live.linkedWorkItemType === 'issue'
       ? { linkedWorkItem: null, linkedTaskSourceContext: null }
       : {}
@@ -255,6 +261,21 @@ function buildIssueLinkUpdates(
       linkedIssue: parsed.number,
       ...displacedLinear,
       ...displacedWorkItem
+    }
+  }
+
+  if (parsed.provider === 'todoist') {
+    return {
+      linkedIssue: null,
+      ...displacedLinear,
+      linkedWorkItem: {
+        provider: 'todoist',
+        type: 'issue',
+        number: 0,
+        title: parsed.taskId,
+        url: buildTodoistTaskUrl(parsed.taskId),
+        todoistIdentifier: parsed.taskId
+      }
     }
   }
 

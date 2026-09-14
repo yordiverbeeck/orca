@@ -7,13 +7,14 @@ export type SmartWorkspaceCommandRowKind =
   | 'linear'
   | 'jira'
   | 'jira-account'
+  | 'todoist'
 
 export type SmartWorkspaceCommandRow = {
   kind: SmartWorkspaceCommandRowKind
   value: string
 }
 
-export type SmartWorkspaceSourceIntent = 'github' | 'gitlab' | 'linear' | 'jira' | null
+export type SmartWorkspaceSourceIntent = 'github' | 'gitlab' | 'linear' | 'jira' | 'todoist' | null
 
 export function resolveSmartWorkspaceCommandValue({
   currentValue,
@@ -59,6 +60,11 @@ export function resolveSmartWorkspaceCommandValue({
     const jiraRow = rows.find((row) => row.kind === 'jira')
     if (jiraRow) {
       return jiraRow.value
+    }
+  } else if (sourceIntent === 'todoist') {
+    const todoistRow = rows.find((row) => row.kind === 'todoist')
+    if (todoistRow) {
+      return todoistRow.value
     }
   }
 

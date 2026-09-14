@@ -22,7 +22,8 @@ const identities = [
     teamId: 'team',
     teamKey: 'ENG'
   },
-  { provider: 'jira', siteId: 'site', siteUrl: 'https://acme.atlassian.net', projectKey: 'ENG' }
+  { provider: 'jira', siteId: 'site', siteUrl: 'https://acme.atlassian.net', projectKey: 'ENG' },
+  { provider: 'todoist', projectId: 'proj', projectName: 'Inbox' }
 ] satisfies ProviderIdentity[]
 
 describe('task provider identity RPC validation', () => {
@@ -50,7 +51,9 @@ describe('task provider identity RPC validation', () => {
     }
   }
 
-  it.each(['gitlab', 'linear', 'jira'])('keeps %s fields optional and nullable', (provider) => {
+  it.each(['gitlab', 'linear', 'jira', 'todoist'])(
+    'keeps %s fields optional and nullable',
+    (provider) => {
     expect(TaskProviderIdentity.parse({ provider })).toEqual({ provider })
     const full = identities.find((identity) => identity.provider === provider)!
     const nullable = Object.fromEntries(

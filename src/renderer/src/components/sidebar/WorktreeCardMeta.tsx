@@ -5,6 +5,7 @@ import { ExternalLink, MonitorUp, Pencil, StickyNote } from 'lucide-react'
 import { toast } from 'sonner'
 import { LinearIcon } from '@/components/icons/LinearIcon'
 import { JiraIcon } from '@/components/icons/JiraIcon'
+import { TodoistIcon } from '@/components/icons/TodoistIcon'
 import { SelectedTextCopyMenu } from '@/components/SelectedTextCopyMenu'
 import { WORKTREE_NATIVE_CONTEXT_MENU_ATTR } from './WorktreeContextMenu'
 import {
@@ -56,6 +57,7 @@ export function WorktreeCardDetailsHover({
   issue,
   linearIssue,
   jiraIssue,
+  todoistTask,
   review,
   comment,
   automationProvenance,
@@ -169,6 +171,7 @@ export function WorktreeCardDetailsHover({
       issue,
       linearIssue,
       jiraIssue,
+      todoistTask,
       review,
       comment,
       automationProvenance,
@@ -313,6 +316,35 @@ export function WorktreeCardDetailsHover({
               <WorktreeCardDetailSectionContent>
                 <div className="text-[13px] font-semibold leading-snug text-foreground break-words">
                   {jiraIssue.title}
+                </div>
+              </WorktreeCardDetailSectionContent>
+            </WorktreeCardDetailSection>
+          )}
+
+          {todoistTask && (
+            <WorktreeCardDetailSection>
+              <DetailHeader
+                icon={<TodoistIcon className="size-3 text-muted-foreground" />}
+                label={translate(
+                  'auto.components.sidebar.WorktreeCardMeta.todoistTask',
+                  'Todoist {{value0}}',
+                  { value0: todoistTask.identifier }
+                )}
+                actions={
+                  <MetadataActionIcon
+                    label={translate(
+                      'auto.components.sidebar.WorktreeCardMeta.viewOnTodoist',
+                      'View on Todoist'
+                    )}
+                    href={todoistTask.url}
+                  >
+                    <ExternalLink className="size-3" />
+                  </MetadataActionIcon>
+                }
+              />
+              <WorktreeCardDetailSectionContent>
+                <div className="text-[13px] font-semibold leading-snug text-foreground break-words">
+                  {todoistTask.title}
                 </div>
               </WorktreeCardDetailSectionContent>
             </WorktreeCardDetailSection>

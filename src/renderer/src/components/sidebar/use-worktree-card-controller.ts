@@ -35,6 +35,7 @@ export function useWorktreeCardController(props: ResolvedWorktreeCardProps) {
   const showIssue = foundation.cardProps.includes('issue')
   const showLinearIssue = foundation.cardProps.includes('linear-issue')
   const showJiraIssue = foundation.cardProps.includes('jira-issue')
+  const showTodoistTask = foundation.cardProps.includes('todoist-task')
   const showPR = foundation.cardProps.includes('pr')
   const showAutomation = foundation.cardProps.includes('automation')
   const showCli = foundation.cardProps.includes('cli')
@@ -115,6 +116,7 @@ export function useWorktreeCardController(props: ResolvedWorktreeCardProps) {
     showIssue,
     showLinearIssue,
     showJiraIssue,
+    showTodoistTask,
     showPR,
     showAutomation,
     showCli,
@@ -124,6 +126,7 @@ export function useWorktreeCardController(props: ResolvedWorktreeCardProps) {
     linearIssue: linked.linearIssue,
     linearIssueDisplay: linked.linearIssueDisplay,
     jiraIssueDisplay: linked.jiraIssueDisplay,
+    todoistTaskDisplay: linked.todoistTaskDisplay,
     prDisplay: review.prDisplay,
     linkedGitLabMR: review.linkedGitLabMR,
     linkedBitbucketPR: review.linkedBitbucketPR,
@@ -149,6 +152,7 @@ export function useWorktreeCardController(props: ResolvedWorktreeCardProps) {
     showIssue,
     showLinearIssue,
     showJiraIssue,
+    showTodoistTask,
     showPR,
     showAutomation,
     showCli,

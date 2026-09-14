@@ -17,6 +17,7 @@ type NewWorkspaceComposerNameSectionProps = Pick<
   | 'onSmartGitLabItemSelect'
   | 'onSmartBranchSelect'
   | 'onSmartLinearIssueSelect'
+  | 'onSmartTodoistTaskSelect'
   | 'onSmartJiraIssueSelect'
   | 'onOpenJiraSettings'
   | 'smartNameSelection'
@@ -50,6 +51,7 @@ export function NewWorkspaceComposerNameSection({
   onSmartGitLabItemSelect,
   onSmartBranchSelect,
   onSmartLinearIssueSelect,
+  onSmartTodoistTaskSelect,
   onSmartJiraIssueSelect,
   onOpenJiraSettings,
   smartNameSelection,
@@ -94,6 +96,7 @@ export function NewWorkspaceComposerNameSection({
         onGitLabItemSelect={onSmartGitLabItemSelect}
         onBranchSelect={onSmartBranchSelect}
         onLinearIssueSelect={onSmartLinearIssueSelect}
+        onTodoistTaskSelect={onSmartTodoistTaskSelect}
         onJiraIssueSelect={onSmartJiraIssueSelect}
         onOpenJiraSettings={onOpenJiraSettings}
         selectedSource={smartNameSelection}

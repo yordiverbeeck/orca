@@ -24,6 +24,7 @@ export function useWorktreeCardSecondaryDetails({
   showIssue,
   showLinearIssue,
   showJiraIssue,
+  showTodoistTask,
   showPR,
   showAutomation,
   showCli,
@@ -33,6 +34,7 @@ export function useWorktreeCardSecondaryDetails({
   linearIssue,
   linearIssueDisplay,
   jiraIssueDisplay,
+  todoistTaskDisplay,
   prDisplay,
   linkedGitLabMR,
   linkedBitbucketPR,
@@ -58,7 +60,10 @@ export function useWorktreeCardSecondaryDetails({
     | 'updateWorktreeMeta'
     | 'settings'
   > &
-  Pick<LinkedDetails, 'issueDisplay' | 'linearIssue' | 'linearIssueDisplay' | 'jiraIssueDisplay'> &
+  Pick<
+    LinkedDetails,
+    'issueDisplay' | 'linearIssue' | 'linearIssueDisplay' | 'jiraIssueDisplay' | 'todoistTaskDisplay'
+  > &
   Pick<
     ReviewDetails,
     'prDisplay' | 'linkedGitLabMR' | 'linkedBitbucketPR' | 'linkedAzureDevOpsPR' | 'linkedGiteaPR'
@@ -67,6 +72,7 @@ export function useWorktreeCardSecondaryDetails({
     showIssue: boolean
     showLinearIssue: boolean
     showJiraIssue: boolean
+    showTodoistTask: boolean
     showPR: boolean
     showAutomation: boolean
     showCli: boolean
@@ -78,12 +84,14 @@ export function useWorktreeCardSecondaryDetails({
   const hoverIssue = issueDisplay
   const hoverLinearIssue = linearIssueDisplay
   const hoverJiraIssue = jiraIssueDisplay
+  const hoverTodoistTask = todoistTaskDisplay
   const hoverReview = prDisplay
   const statusLaneReview = statusPrDisplay ?? hoverReview
   const hoverComment = worktree.comment
   const metaIssue = showIssue ? hoverIssue : null
   const metaLinearIssue = showLinearIssue ? hoverLinearIssue : null
   const metaJiraIssue = showJiraIssue ? hoverJiraIssue : null
+  const metaTodoistTask = showTodoistTask ? hoverTodoistTask : null
   const metaReview = showPR ? hoverReview : null
   const metaAutomationProvenance = showAutomation ? worktree.automationProvenance : null
   const metaCliProvenance = showCli ? worktree.cliProvenance : null
@@ -231,6 +239,7 @@ export function useWorktreeCardSecondaryDetails({
     issue: metaIssue,
     linearIssue: metaLinearIssue,
     jiraIssue: metaJiraIssue,
+    todoistTask: metaTodoistTask,
     review: newCardStyle ? null : metaReview,
     comment: metaComment,
     automationProvenance: metaAutomationProvenance,
@@ -247,12 +256,14 @@ export function useWorktreeCardSecondaryDetails({
     hoverIssue,
     hoverLinearIssue,
     hoverJiraIssue,
+    hoverTodoistTask,
     hoverReview,
     statusLaneReview,
     hoverComment,
     metaIssue,
     metaLinearIssue,
     metaJiraIssue,
+    metaTodoistTask,
     metaReview,
     metaAutomationProvenance,
     metaCliProvenance,

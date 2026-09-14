@@ -2,6 +2,7 @@ import type { GitHubWorkItem } from '../github/work-item-types'
 import type { GitLabWorkItem } from '../gitlab-types'
 import type { JiraIssue } from '../jira-types'
 import type { LinearIssue } from '../linear/issue-types'
+import type { TodoistTask } from '../todoist-types'
 import type { LinearCollectionResult } from '../linear/workspace-types'
 import type { BaseRefSearchResult } from '../repo-types'
 import { JIRA_ISSUE_KEY_PATTERN, parseJiraIssueUrl } from '../jira-issue-url'
@@ -17,7 +18,15 @@ export {
   isSmartWorkspaceSourceQueryWithinLimit
 } from './smart-workspace-source-query'
 
-export type SmartNameMode = 'smart' | 'github' | 'gitlab' | 'branches' | 'linear' | 'jira' | 'text'
+export type SmartNameMode =
+  | 'smart'
+  | 'github'
+  | 'gitlab'
+  | 'branches'
+  | 'linear'
+  | 'jira'
+  | 'todoist'
+  | 'text'
 
 export type SmartWorkspaceSourceRow =
   | { kind: 'use-name'; value: string; name: string }
@@ -27,6 +36,7 @@ export type SmartWorkspaceSourceRow =
   | { kind: 'branch'; value: string; refName: string; localBranchName: string }
   | { kind: 'linear'; value: string; issue: LinearIssue }
   | { kind: 'jira'; value: string; issue: JiraIssue }
+  | { kind: 'todoist'; value: string; task: TodoistTask }
 
 type LinearIssueSourceInput = LinearIssue[] | LinearCollectionResult<LinearIssue> | null | undefined
 
@@ -37,6 +47,7 @@ const EMPTY_HINT_BY_MODE: Record<SmartNameMode, string> = {
   branches: 'No matching branches.',
   linear: 'Start typing to search Linear issues.',
   jira: 'Start typing to search Jira issues, or paste an issue URL.',
+  todoist: 'Start typing to search Todoist tasks, or paste a task URL.',
   text: ''
 }
 
@@ -79,6 +90,10 @@ export function isBlockingTaskUrlResolution({
 
 function toJiraSourceRow(issue: JiraIssue): SmartWorkspaceSourceRow {
   return { kind: 'jira', value: `jira-${issue.siteId ?? ''}-${issue.key}`, issue }
+}
+
+export function toTodoistSourceRow(task: TodoistTask): SmartWorkspaceSourceRow {
+  return { kind: 'todoist', value: `todoist-${task.id}`, task }
 }
 
 function toGitHubSourceRow(item: GitHubWorkItem): SmartWorkspaceSourceRow {
@@ -218,6 +233,7 @@ export function buildSmartWorkspaceSourceRows({
   linearAvailable,
   linearIssues,
   linearUrlIntentOwnsResults = false,
+  todoistTasks = [],
   mode,
   resultLimit,
   value
@@ -234,6 +250,7 @@ export function buildSmartWorkspaceSourceRows({
   linearAvailable: boolean
   linearIssues: LinearIssueSourceInput
   linearUrlIntentOwnsResults?: boolean
+  todoistTasks?: TodoistTask[]
   mode: SmartNameMode
   resultLimit: number
   value: string
@@ -260,6 +277,7 @@ export function buildSmartWorkspaceSourceRows({
     linearAvailable,
     linearIssues: resolvedLinearIssues,
     linearUrlIntentOwnsResults,
+    todoistTasks,
     mode,
     resultLimit,
     value
@@ -318,6 +336,9 @@ export function buildSmartWorkspaceSourceRows({
   }
   if (mode === 'jira') {
     nextRows.push(...jiraIssues.map(toJiraSourceRow))
+  }
+  if (mode === 'smart' || mode === 'todoist') {
+    nextRows.push(...todoistTasks.map(toTodoistSourceRow))
   }
   return nextRows.slice(0, resultLimit + 1)
 }

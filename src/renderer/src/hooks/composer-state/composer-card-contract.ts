@@ -72,6 +72,7 @@ export type ComposerCardActionProps = {
   onSmartBranchSelect: ComposerModel['handleSmartBranchSelect']
   onSmartNameModeChange?: ComposerModel['setSmartNameMode']
   onSmartLinearIssueSelect: ComposerModel['handleSmartLinearIssueSelect']
+  onSmartTodoistTaskSelect: ComposerModel['handleSmartTodoistTaskSelect']
   onSmartJiraIssueSelect: ComposerModel['handleSmartJiraIssueSelect']
   onOpenJiraSettings: ComposerModel['handleOpenJiraSettings']
   smartNameGitHubSourceContext?: ComposerModel['selectedRepoGitHubSourceContext']

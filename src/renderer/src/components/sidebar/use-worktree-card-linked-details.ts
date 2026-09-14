@@ -5,6 +5,7 @@ import { useAppStore } from '@/store'
 import type { IssueInfo } from '../../../../shared/github/pull-request-types'
 import type { LinearIssue } from '../../../../shared/linear/issue-types'
 import { getWorktreeCardJiraIssueDisplay } from './worktree-card-jira-issue-display'
+import { getWorktreeCardTodoistTaskDisplay } from './worktree-card-todoist-task-display'
 import type { WorktreeCardIssueDisplay } from './WorktreeCardMeta'
 import {
   coerceWorktreeCardVisibleTitle,
@@ -107,11 +108,13 @@ export function useWorktreeCardLinkedDetails({
         }
     : null
   const jiraIssueDisplay = getWorktreeCardJiraIssueDisplay(worktree)
+  const todoistTaskDisplay = getWorktreeCardTodoistTaskDisplay(worktree)
   const cardTitleDisplay = getWorktreeCardTitleDisplay({
     storedDisplayName: worktree.displayName,
     branchName: branch,
     linearIssueTitle: linearIssueDisplay?.title,
     jiraIssueTitle: jiraIssueDisplay?.title,
+    todoistTaskTitle: todoistTaskDisplay?.title,
     issueTitle: issueDisplay?.title,
     reviewTitle: prDisplay?.title
   })
@@ -129,6 +132,7 @@ export function useWorktreeCardLinkedDetails({
     linearIssue,
     linearIssueDisplay,
     jiraIssueDisplay,
+    todoistTaskDisplay,
     visibleCardTitle,
     isDeleting,
     isQueuedForDeletion,

@@ -7,17 +7,25 @@ import {
 } from './worktree-meta-updates'
 
 function formatLinkLabel(provider: IssueLinkProvider, value: string): string {
-  return provider === 'linear'
-    ? translate(
-        'auto.components.sidebar.worktreeIssueDisplacement.3f61c0a8d2',
-        'Linear {{value}}',
-        { value }
-      )
-    : translate(
-        'auto.components.sidebar.worktreeIssueDisplacement.9c4b7e1f60',
-        'GitHub #{{value}}',
-        { value }
-      )
+  if (provider === 'linear') {
+    return translate(
+      'auto.components.sidebar.worktreeIssueDisplacement.3f61c0a8d2',
+      'Linear {{value}}',
+      { value }
+    )
+  }
+  if (provider === 'todoist') {
+    return translate(
+      'auto.components.sidebar.worktreeIssueDisplacement.todoist',
+      'Todoist {{value}}',
+      { value }
+    )
+  }
+  return translate(
+    'auto.components.sidebar.worktreeIssueDisplacement.9c4b7e1f60',
+    'GitHub #{{value}}',
+    { value }
+  )
 }
 
 /** Names the persisted links a save would drop. A workspace tracks one issue, so
