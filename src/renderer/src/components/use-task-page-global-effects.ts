@@ -12,6 +12,9 @@ export function useTaskPageGlobalEffects(model: TaskPageJiraIssueCreationModel) 
     expectedPreflightContextKey,
     jiraStatusContextKey,
     checkJiraConnection,
+    todoistStatusContextKey,
+    checkTodoistConnection,
+    todoistStatusReady,
     providerRuntimeContextKey,
     preflightStatusCurrent,
     linearStatusReady,
@@ -99,9 +102,13 @@ export function useTaskPageGlobalEffects(model: TaskPageJiraIssueCreationModel) 
     if (!jiraStatusReady) {
       void checkJiraConnection()
     }
+    if (!todoistStatusReady) {
+      void checkTodoistConnection()
+    }
   }, [
     checkJiraConnection,
     checkLinearConnection,
+    checkTodoistConnection,
     expectedPreflightContextKey,
     jiraStatusContextKey,
     jiraStatusReady,
@@ -111,7 +118,9 @@ export function useTaskPageGlobalEffects(model: TaskPageJiraIssueCreationModel) 
     preflightStatusContextKey,
     preflightStatusChecked,
     preflightStatusCurrent,
-    refreshPreflightStatus
+    refreshPreflightStatus,
+    todoistStatusContextKey,
+    todoistStatusReady
   ])
 
   // Why: debounce the Linear search input so we don't fire a request per keystroke (300ms, matching GitHub search).

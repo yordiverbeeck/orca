@@ -69,6 +69,9 @@ export function useTaskPageStoreBindings() {
   const searchJiraIssues = useAppStore((s) => s.searchJiraIssues)
   const listJiraIssues = useAppStore((s) => s.listJiraIssues)
   const checkJiraConnection = useAppStore((s) => s.checkJiraConnection)
+  const todoistStatusChecked = useAppStore((s) => s.todoistStatusChecked)
+  const todoistStatusContextKey = useAppStore((s) => s.todoistStatusContextKey)
+  const checkTodoistConnection = useAppStore((s) => s.checkTodoistConnection)
   const providerRuntimeContextKey = getProviderRuntimeContextKey(settings)
   const providerRuntimeContextKeyRef = useRef(providerRuntimeContextKey)
   // Submit handlers must fence against the current provider context immediately.
@@ -79,6 +82,8 @@ export function useTaskPageStoreBindings() {
   const preflightStatusCurrent = preflightStatusContextKey === expectedPreflightContextKey
   const linearStatusReady = linearStatusCurrent && linearStatusChecked
   const jiraStatusReady = jiraStatusCurrent && jiraStatusChecked
+  const todoistStatusReady =
+    todoistStatusContextKey === providerRuntimeContextKey && todoistStatusChecked
   const linearConnected = linearStatusCurrent && linearStatus.connected
   const jiraConnected = jiraStatusCurrent && jiraStatus.connected
   const submitShortcutLabel = getScreenSubmitShortcutLabel()
@@ -142,6 +147,10 @@ export function useTaskPageStoreBindings() {
     searchJiraIssues,
     listJiraIssues,
     checkJiraConnection,
+    todoistStatusChecked,
+    todoistStatusContextKey,
+    checkTodoistConnection,
+    todoistStatusReady,
     providerRuntimeContextKey,
     providerRuntimeContextKeyRef,
     linearStatusCurrent,
