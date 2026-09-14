@@ -44,6 +44,9 @@ export function useSmartWorkspaceNameFieldFoundation(
     refreshPreflightStatus,
     searchJiraIssues,
     searchLinearIssues,
+    searchTodoistTasks,
+    fetchTodoistTask,
+    todoistStatus,
     settings
   } = useAppStore(
     useShallow((s) => ({
@@ -63,6 +66,9 @@ export function useSmartWorkspaceNameFieldFoundation(
       refreshPreflightStatus: s.refreshPreflightStatus,
       searchJiraIssues: s.searchJiraIssues,
       searchLinearIssues: s.searchLinearIssues,
+      searchTodoistTasks: s.searchTodoistTasks,
+      fetchTodoistTask: s.fetchTodoistTask,
+      todoistStatus: s.todoistStatus,
       settings: s.settings
     }))
   )
@@ -186,6 +192,9 @@ export function useSmartWorkspaceNameFieldFoundation(
     listLinearIssues,
     searchJiraIssues,
     searchLinearIssues,
+    searchTodoistTasks,
+    fetchTodoistTask,
+    todoistStatus,
     selectedRepo,
     selectedRepoOwnerSettings,
     githubSourceContext,

@@ -68,6 +68,7 @@ export function normalizeLoadedUiState(
   const inlineAgentsMigrated = parsed.ui?._inlineAgentsDefaultedForAllUsers === true
   const expandedCardPropsMigrated = parsed.ui?._expandedWorktreeCardPropertiesDefaulted === true
   const jiraIssueCardPropDefaulted = parsed.ui?._jiraIssueWorktreeCardPropertyDefaulted === true
+  const todoistTaskCardPropDefaulted = parsed.ui?._todoistTaskWorktreeCardPropertyDefaulted === true
   const hadExperimentOn = readDeprecatedExperimentFlag(parsed)
   const deliberateUncheck =
     hadExperimentOn && Array.isArray(rawCardProps) && !rawCardProps.includes('inline-agents')
@@ -109,7 +110,11 @@ export function normalizeLoadedUiState(
       jiraIssueCardPropDefaulted || expandedCandidate.includes('jira-issue')
         ? expandedCandidate
         : [...expandedCandidate, 'jira-issue' as const]
-    const normalized = normalizeWorktreeCardProperties(jiraCandidate)
+    const todoistCandidate =
+      todoistTaskCardPropDefaulted || jiraCandidate.includes('todoist-task')
+        ? jiraCandidate
+        : [...jiraCandidate, 'todoist-task' as const]
+    const normalized = normalizeWorktreeCardProperties(todoistCandidate)
     const changed =
       normalized.length !== rawCardProps.length ||
       normalized.some((property, index) => property !== rawCardProps[index])
@@ -119,7 +124,8 @@ export function normalizeLoadedUiState(
     migratedCardProps !== undefined ||
     !inlineAgentsMigrated ||
     !expandedCardPropsMigrated ||
-    !jiraIssueCardPropDefaulted
+    !jiraIssueCardPropDefaulted ||
+    !todoistTaskCardPropDefaulted
   ) {
     markNeedsSave()
   }
@@ -201,6 +207,7 @@ export function normalizeLoadedUiState(
     _inlineAgentsDefaultedForExperiment: true,
     _inlineAgentsDefaultedForAllUsers: true,
     _expandedWorktreeCardPropertiesDefaulted: true,
-    _jiraIssueWorktreeCardPropertyDefaulted: true
+    _jiraIssueWorktreeCardPropertyDefaulted: true,
+    _todoistTaskWorktreeCardPropertyDefaulted: true
   }
 }

@@ -3,6 +3,7 @@ import { CalendarClock, CircleDot, SquareTerminal, StickyNote } from 'lucide-rea
 import { cn } from '@/lib/utils'
 import { LinearIcon } from '@/components/icons/LinearIcon'
 import { JiraIcon } from '@/components/icons/JiraIcon'
+import { TodoistIcon } from '@/components/icons/TodoistIcon'
 import { MetaIconBadge } from './WorktreeCardMetadataControls'
 import { getReviewLabel, ReviewIcon } from './worktree-review-helpers'
 import type {
@@ -19,6 +20,7 @@ export function hasWorktreeCardDetails({
   issue,
   linearIssue,
   jiraIssue,
+  todoistTask,
   review,
   comment,
   automationProvenance,
@@ -28,6 +30,7 @@ export function hasWorktreeCardDetails({
     issue ||
     linearIssue ||
     jiraIssue ||
+    todoistTask ||
     review ||
     hasComment(comment) ||
     automationProvenance ||
@@ -43,6 +46,7 @@ export const WorktreeCardMetaBadges = React.forwardRef<
     issue,
     linearIssue,
     jiraIssue,
+    todoistTask,
     review,
     comment,
     automationProvenance,
@@ -57,6 +61,7 @@ export const WorktreeCardMetaBadges = React.forwardRef<
       issue,
       linearIssue,
       jiraIssue,
+      todoistTask,
       review,
       comment,
       automationProvenance,
@@ -139,6 +144,17 @@ export const WorktreeCardMetaBadges = React.forwardRef<
           )}
         >
           <JiraIcon className="text-muted-foreground" />
+        </MetaIconBadge>
+      )}
+      {todoistTask && (
+        <MetaIconBadge
+          label={translate(
+            'auto.components.sidebar.WorktreeCardMeta.linkedTodoist',
+            'Linked Todoist {{value0}}',
+            { value0: todoistTask.identifier }
+          )}
+        >
+          <TodoistIcon className="text-muted-foreground" />
         </MetaIconBadge>
       )}
       {review && (

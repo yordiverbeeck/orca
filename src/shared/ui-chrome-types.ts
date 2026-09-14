@@ -36,6 +36,7 @@ export type WorktreeCardProperty =
   | 'issue'
   | 'linear-issue'
   | 'jira-issue'
+  | 'todoist-task'
   | 'pr'
   | 'automation'
   // Badge marking workspaces created through `orca worktree create`.

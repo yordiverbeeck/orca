@@ -9,11 +9,12 @@ import {
 } from '../../../../shared/task-providers'
 import { JiraIcon } from '@/components/icons/JiraIcon'
 import { LinearIcon } from '@/components/icons/LinearIcon'
+import { TodoistIcon } from '@/components/icons/TodoistIcon'
 import { Button } from '@/components/ui/button'
 import { useAppStore } from '@/store'
 import { SearchableSetting } from './SearchableSetting'
 import { SettingsSubsectionHeader } from './SettingsFormControls'
-import { CodeHostSetupSteps, JiraSetupSteps } from './TaskSourceSimpleSetup'
+import { CodeHostSetupSteps, JiraSetupSteps, TodoistSetupSteps } from './TaskSourceSimpleSetup'
 import { TaskSourceLinearSetup } from './TaskSourceLinearSetup'
 import { TaskSourceProviderCard } from './TaskSourceProviderCard'
 import {
@@ -22,7 +23,8 @@ import {
 } from './task-source-setup-state'
 import {
   JIRA_INTEGRATION_SECTION_ID,
-  LINEAR_INTEGRATION_SECTION_ID
+  LINEAR_INTEGRATION_SECTION_ID,
+  TODOIST_INTEGRATION_SECTION_ID
 } from './task-provider-integration-section-ids'
 import { getTasksPaneSearchKeywords } from './tasks-search'
 import { useIntegrationProviderStatusRefresh } from './use-integration-provider-status-refresh'
@@ -89,6 +91,18 @@ const PROVIDER_META: Record<
       )
     },
     Icon: ({ className }) => <JiraIcon className={className} />
+  },
+  todoist: {
+    get label() {
+      return translate('auto.components.settings.TasksPane.todoist', 'Todoist')
+    },
+    get description() {
+      return translate(
+        'auto.components.settings.TasksPane.todoistDescription',
+        'Connect Todoist with a personal API token and show it in Tasks.'
+      )
+    },
+    Icon: ({ className }) => <TodoistIcon className={className} />
   }
 }
 
@@ -97,6 +111,7 @@ export function TasksPane({ settings, updateSettings }: TasksPaneProps): React.J
   const openSettingsPage = useAppStore((s) => s.openSettingsPage)
   const openSettingsTarget = useAppStore((s) => s.openSettingsTarget)
   const checkJiraConnection = useAppStore((s) => s.checkJiraConnection)
+  const checkTodoistConnection = useAppStore((s) => s.checkTodoistConnection)
   const refreshPreflightStatus = useAppStore((s) => s.refreshPreflightStatus)
   const readinessByProvider = useTaskSourceProviderReadiness(visibleProviders)
   useIntegrationProviderStatusRefresh()
@@ -226,6 +241,16 @@ export function TasksPane({ settings, updateSettings }: TasksPaneProps): React.J
                     onToggleVisible={() => toggleProvider('jira')}
                     onConnected={() => void checkJiraConnection()}
                     onOpenIntegrations={() => openIntegrations(JIRA_INTEGRATION_SECTION_ID)}
+                  />
+                ) : provider === 'todoist' ? (
+                  <TodoistSetupSteps
+                    connected={readiness.connected}
+                    checking={readiness.checking}
+                    visible={visible}
+                    canHide={canHide}
+                    onToggleVisible={() => toggleProvider('todoist')}
+                    onConnected={() => void checkTodoistConnection()}
+                    onOpenIntegrations={() => openIntegrations(TODOIST_INTEGRATION_SECTION_ID)}
                   />
                 ) : (
                   <CodeHostSetupSteps

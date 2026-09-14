@@ -4,6 +4,7 @@ import type { GitHubWorkItem } from '../../../../shared/github/work-item-types'
 import type { GitLabWorkItem } from '../../../../shared/gitlab-types'
 import type { JiraIssue } from '../../../../shared/jira-types'
 import type { LinearIssue } from '../../../../shared/linear/issue-types'
+import type { TodoistTask } from '../../../../shared/todoist-types'
 import type { BaseRefSearchResult } from '../../../../shared/repo-types'
 import type { SmartNameMode } from './smart-workspace-source-results'
 import type { MrStateFilter } from './smart-workspace-localized-options'
@@ -23,6 +24,7 @@ export function useSmartWorkspaceNameFieldState(textOnly: boolean, value: string
   } | null>(null)
   const [linearIssues, setLinearIssues] = useState<LinearIssue[]>([])
   const [jiraIssues, setJiraIssues] = useState<JiraIssue[]>([])
+  const [todoistTasks, setTodoistTasks] = useState<TodoistTask[]>([])
   const [githubLoading, setGithubLoading] = useState(false)
   const [gitlabLoading, setGitlabLoading] = useState(false)
   const [branchesLoading, setBranchesLoading] = useState(false)
@@ -66,6 +68,8 @@ export function useSmartWorkspaceNameFieldState(textOnly: boolean, value: string
     setLinearIssues,
     jiraIssues,
     setJiraIssues,
+    todoistTasks,
+    setTodoistTasks,
     githubLoading,
     setGithubLoading,
     gitlabLoading,

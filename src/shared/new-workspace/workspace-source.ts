@@ -2,6 +2,7 @@ import { getLinearOrganizationUrlKeyFromIssueUrl } from '../linear/links'
 import type { FolderWorkspaceLinkedTask } from '../folder-workspace-types'
 import type { JiraIssue } from '../jira-types'
 import type { LinearIssue } from '../linear/issue-types'
+import type { TodoistTask } from '../todoist-types'
 import {
   getLinkedWorkItemSuggestedName,
   getLinkedWorkItemWorkspaceName,
@@ -37,6 +38,11 @@ export type JiraWorkspaceSource = WorkspaceSourceLinkedItem & {
   type: 'issue'
 }
 
+export type TodoistWorkspaceSource = WorkspaceSourceLinkedItem & {
+  provider: 'todoist'
+  type: 'issue'
+}
+
 export type WorkspaceSourceItemLike = Omit<WorkspaceSourceLinkedItem, 'provider'> & {
   provider?: WorkspaceSourceProvider
 }
@@ -49,6 +55,7 @@ export type WorkspaceSourceSelectionKind =
   | 'branch'
   | 'linear'
   | 'jira'
+  | 'todoist'
 
 export type WorkspaceSourceSelection = {
   kind: WorkspaceSourceSelectionKind
@@ -63,6 +70,19 @@ export function isGitLabIssueUrl(url: string): boolean {
     return GITLAB_ISSUE_PATH_RE.test(new URL(url).pathname)
   } catch {
     return GITLAB_ISSUE_PATH_RE.test(url)
+  }
+}
+
+function isTodoistTaskUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url)
+    const host = parsed.hostname.replace(/^www\./i, '').toLowerCase()
+    return (
+      (host === 'app.todoist.com' && /\/task\//i.test(parsed.pathname)) ||
+      (host === 'todoist.com' && /showtask/i.test(parsed.pathname))
+    )
+  } catch {
+    return /todoist\.com\/(?:app\/task\/|showTask)/i.test(url)
   }
 }
 
@@ -87,6 +107,9 @@ export function getWorkspaceSourceProvider(item: WorkspaceSourceItemLike): Works
   }
   if (item.jiraIdentifier || isJiraIssueUrl(item.url)) {
     return 'jira'
+  }
+  if (item.todoistIdentifier || isTodoistTaskUrl(item.url)) {
+    return 'todoist'
   }
   if (item.type === 'mr' || isGitLabIssueUrl(item.url)) {
     return 'gitlab'
@@ -157,6 +180,19 @@ export function buildJiraWorkspaceSource(
   }
 }
 
+export function buildTodoistWorkspaceSource(
+  task: Pick<TodoistTask, 'id' | 'content' | 'url'>
+): TodoistWorkspaceSource {
+  return {
+    provider: 'todoist',
+    type: 'issue',
+    number: 0,
+    title: task.content,
+    url: task.url,
+    todoistIdentifier: task.id
+  }
+}
+
 export function shouldApplyWorkspaceSourceAutoName(args: {
   currentName: string
   lastAutoName: string
@@ -198,7 +234,9 @@ export function buildWorkspaceSourceSelection(args: {
       ? 'linear'
       : provider === 'jira'
         ? 'jira'
-        : provider === 'gitlab'
+        : provider === 'todoist'
+          ? 'todoist'
+          : provider === 'gitlab'
           ? linkedWorkItem.type === 'mr'
             ? 'gitlab-mr'
             : 'gitlab-issue'
@@ -208,7 +246,10 @@ export function buildWorkspaceSourceSelection(args: {
   return {
     kind,
     label:
-      provider === 'linear' || provider === 'jira' || linkedWorkItem.number === 0
+      provider === 'linear' ||
+      provider === 'jira' ||
+      provider === 'todoist' ||
+      linkedWorkItem.number === 0
         ? linkedWorkItem.title
         : `#${linkedWorkItem.number} ${linkedWorkItem.title}`,
     url: linkedWorkItem.url
@@ -222,5 +263,5 @@ export function shouldPreserveWorkspaceSourceOnRepoChange(
     return false
   }
   const provider = getWorkspaceSourceProvider(item)
-  return provider === 'linear' || provider === 'jira'
+  return provider === 'linear' || provider === 'jira' || provider === 'todoist'
 }

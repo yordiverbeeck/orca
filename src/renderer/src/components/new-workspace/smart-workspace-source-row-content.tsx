@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { LinearIcon } from '@/components/icons/LinearIcon'
 import { JiraIcon } from '@/components/icons/JiraIcon'
+import { TodoistIcon } from '@/components/icons/TodoistIcon'
 import { cn } from '@/lib/utils'
 import { translate } from '@/i18n/i18n'
 import type { JiraSite } from '../../../../shared/jira-types'
@@ -55,6 +56,9 @@ export function RowIcon({ row }: { row: RowEntry }): React.JSX.Element {
   if (row.kind === 'jira' || row.kind === 'jira-account') {
     return <JiraIcon className="size-3.5 shrink-0 text-muted-foreground" />
   }
+  if (row.kind === 'todoist') {
+    return <TodoistIcon className="size-3.5 shrink-0 text-muted-foreground" />
+  }
   return <LinearIcon className="size-3.5 shrink-0 text-muted-foreground" />
 }
 
@@ -77,6 +81,9 @@ export function SelectionIcon({
   }
   if (kind === 'jira') {
     return <JiraIcon className="size-3.5 shrink-0 text-muted-foreground" />
+  }
+  if (kind === 'todoist') {
+    return <TodoistIcon className="size-3.5 shrink-0 text-muted-foreground" />
   }
   return <LinearIcon className="size-3.5 shrink-0 text-muted-foreground" />
 }
@@ -148,6 +155,16 @@ export function RowLabel({
         <span className="font-medium text-foreground">{row.issue.key}</span> {row.issue.title}
         {showJiraSiteContext && siteLabel ? (
           <span className="text-muted-foreground"> — {siteLabel}</span>
+        ) : null}
+      </span>
+    )
+  }
+  if (row.kind === 'todoist') {
+    return (
+      <span className="min-w-0 truncate">
+        <span className="font-medium text-foreground">{row.task.content}</span>
+        {row.task.projectName ? (
+          <span className="text-muted-foreground"> — {row.task.projectName}</span>
         ) : null}
       </span>
     )

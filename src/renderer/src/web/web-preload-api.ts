@@ -87,6 +87,7 @@ function createWebPreloadApi(): Partial<PreloadApi> {
     gl: createGitLabApi(),
     hostedReview: createRuntimeNamespaceApi('hostedReview'),
     linear: createRuntimeNamespaceApi('linear'),
+    todoist: createRuntimeNamespaceApi('todoist'),
     hooks: createHooksApi(),
     stats: {
       getSummary: async () =>

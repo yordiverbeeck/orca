@@ -16,6 +16,7 @@ export type LaunchableWorkItem = {
   isCrossRepository?: boolean
   pasteContent?: string
   linearIdentifier?: string
+  todoistIdentifier?: string
   linearWorkspaceId?: string
   linearOrganizationUrlKey?: string
   linkedContext?: LinkedWorkItemContext

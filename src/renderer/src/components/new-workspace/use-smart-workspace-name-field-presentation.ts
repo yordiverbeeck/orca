@@ -137,6 +137,11 @@ export function useSmartWorkspaceNameFieldPresentation(
         })
       ),
       linearUrlIntentOwnsResults: true,
+      todoistTasks: getVisibleHeldProviderResults({
+        items: foundation.todoistTasks,
+        value,
+        debouncedQuery
+      }),
       githubUrlIntent,
       gitlabUrlIntent,
       mode,
@@ -160,6 +165,7 @@ export function useSmartWorkspaceNameFieldPresentation(
     linearIssues,
     linearUrlIntentOwnsInput,
     linearUrlLookupFailed,
+    foundation.todoistTasks,
     mode,
     selectedRepo?.id,
     value
@@ -180,7 +186,7 @@ export function useSmartWorkspaceNameFieldPresentation(
   const isQueryStale =
     !linearUrlIntentOwnsInput && trimmedValue.length > 0 && trimmedDebouncedQuery !== trimmedValue
   // Why: unambiguous refs highlight their source row instead of the typed-text fallback.
-  const sourceIntent = useMemo<'github' | 'gitlab' | 'linear' | 'jira' | null>(() => {
+  const sourceIntent = useMemo<'github' | 'gitlab' | 'linear' | 'jira' | 'todoist' | null>(() => {
     if (!isSmartWorkspaceSourceQueryWithinLimit(value)) {
       return null
     }
@@ -208,6 +214,9 @@ export function useSmartWorkspaceNameFieldPresentation(
       ) {
         return 'linear'
       }
+    }
+    if (rows.some((row) => row.kind === 'todoist')) {
+      return 'todoist'
     }
     return null
   }, [jiraSource.intent, linearAvailable, rows, value])

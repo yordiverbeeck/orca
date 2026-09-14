@@ -72,6 +72,7 @@ export type NewWorkspaceComposerCardProps = {
   onSmartBranchSelect: (refName: string, localBranchName: string) => void
   onSmartNameModeChange?: (mode: SmartNameMode) => void
   onSmartLinearIssueSelect: (issue: LinearIssue) => void
+  onSmartTodoistTaskSelect?: (task: import('../../../../shared/todoist-types').TodoistTask) => void
   onSmartJiraIssueSelect?: (issue: JiraIssue, sourceContext: TaskSourceContext) => void
   onOpenJiraSettings?: () => void
   smartNameSelection: SmartWorkspaceNameSelection | null

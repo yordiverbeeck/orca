@@ -3,6 +3,8 @@ import { githubRepoIdentityKey } from '../github/repository-identity-key'
 import type { GitHubWorkItem } from '../github/work-item-types'
 import type { GitLabWorkItem } from '../gitlab-types'
 import type { LinearIssue } from '../linear/issue-types'
+import type { TodoistTask } from '../todoist-types'
+import { parseBoundedSmartWorkspaceTodoistTaskInput } from './smart-workspace-todoist-intent'
 import { parseGitLabIssueOrMRLink } from './gitlab-links'
 import {
   isSmartWorkspaceLinearIssueIntentMatch,
@@ -18,6 +20,7 @@ type SmartWorkspaceUrlSourceMode =
   | 'branches'
   | 'linear'
   | 'jira'
+  | 'todoist'
   | 'text'
 
 export type SmartWorkspaceUrlSourceRow =
@@ -25,6 +28,7 @@ export type SmartWorkspaceUrlSourceRow =
   | { kind: 'github'; value: string; item: GitHubWorkItem }
   | { kind: 'gitlab'; value: string; item: GitLabWorkItem }
   | { kind: 'linear'; value: string; issue: LinearIssue }
+  | { kind: 'todoist'; value: string; task: TodoistTask }
 
 function toGitHubSourceRow(item: GitHubWorkItem): SmartWorkspaceUrlSourceRow {
   return { kind: 'github', value: `github-${item.repoId}-${item.type}-${item.number}`, item }
@@ -71,6 +75,7 @@ export function buildSmartWorkspaceUrlSourceRows({
   linearAvailable,
   linearIssues,
   linearUrlIntentOwnsResults,
+  todoistTasks = [],
   mode,
   resultLimit,
   value
@@ -83,6 +88,7 @@ export function buildSmartWorkspaceUrlSourceRows({
   linearAvailable: boolean
   linearIssues: LinearIssue[]
   linearUrlIntentOwnsResults: boolean
+  todoistTasks?: TodoistTask[]
   mode: SmartWorkspaceUrlSourceMode
   resultLimit: number
   value: string
@@ -120,6 +126,14 @@ export function buildSmartWorkspaceUrlSourceRows({
           }))
           .slice(0, resultLimit)
       : []
+    return withSmartNameFallback(mode, trimmed, rows)
+  }
+  const todoistIntent = parseBoundedSmartWorkspaceTodoistTaskInput(trimmed)
+  if (todoistIntent && /^https?:\/\//i.test(trimmed) && (mode === 'smart' || mode === 'todoist')) {
+    const rows = todoistTasks
+      .filter((task) => task.id === todoistIntent.taskId)
+      .map((task) => ({ kind: 'todoist' as const, value: `todoist-${task.id}`, task }))
+      .slice(0, resultLimit)
     return withSmartNameFallback(mode, trimmed, rows)
   }
   return null

@@ -173,6 +173,16 @@ const ISSUE_WORKTREE_CARD_PROPERTY_OPTIONS: WorktreeCardPropertyOption[] = [
         'Jira issues'
       )
     }
+  },
+  {
+    id: 'todoist-task',
+    properties: ['todoist-task'],
+    get label() {
+      return translate(
+        'auto.components.sidebar.SidebarWorkspaceOptionsMenu.todoistTasks',
+        'Todoist tasks'
+      )
+    }
   }
 ]
 

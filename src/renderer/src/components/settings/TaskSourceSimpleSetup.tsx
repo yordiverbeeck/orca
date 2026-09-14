@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { JiraConnectDialog } from '@/components/jira-connect-dialog'
+import { TodoistApiTokenDialog } from '@/components/todoist-api-token-dialog'
 import { Button } from '@/components/ui/button'
 import { TaskSourceShowInTasksStep } from './TaskSourceShowInTasksStep'
 import { TaskSourceStepRow } from './TaskSourceStepRow'
@@ -116,6 +117,55 @@ export function JiraSetupSteps(
         />
       </ol>
       <JiraConnectDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        onConnected={props.onConnected}
+      />
+    </>
+  )
+}
+
+export function TodoistSetupSteps(
+  props: ConnectStepProps & { onConnected: () => void; onOpenIntegrations: () => void }
+): React.JSX.Element {
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  return (
+    <>
+      <ol className="divide-y divide-border/50">
+        <TaskSourceStepRow
+          index={1}
+          state={getConnectStepState(props)}
+          title={translate(
+            'auto.components.settings.TasksPane.connectTodoistTitle',
+            'Connect Todoist'
+          )}
+          description={translate(
+            'auto.components.settings.TasksPane.connectTodoistDescription',
+            'Add a personal API token from Todoist Settings → Integrations → Developer.'
+          )}
+          action={
+            <Button
+              type="button"
+              size="sm"
+              variant={props.connected ? 'outline' : 'default'}
+              onClick={props.connected ? props.onOpenIntegrations : () => setDialogOpen(true)}
+            >
+              {props.connected
+                ? translate('auto.components.settings.TasksPane.manageTodoist', 'Manage token')
+                : translate('auto.components.settings.TasksPane.addTodoist', 'Add Todoist access')}
+            </Button>
+          }
+        />
+        <TaskSourceShowInTasksStep
+          index={2}
+          providerLabel={translate('auto.components.settings.TasksPane.todoist', 'Todoist')}
+          visible={props.visible}
+          canHide={props.canHide}
+          onToggleVisible={props.onToggleVisible}
+        />
+      </ol>
+      <TodoistApiTokenDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onConnected={props.onConnected}
